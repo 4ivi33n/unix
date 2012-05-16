@@ -1,0 +1,7 @@
+hello world
+before fork
+child process
+8666 1
+before fork
+parent process and child id is 8666
+8665 0

@@ -1,0 +1,19 @@
+wap to illustrate at exit function ********
+wap to illustrate setjump and longjump function   **********
+wap to implement fork function   *************
+wap to implement vfork function  *************
+wap to illustrate zombie process  *******
+wap to prevent zombie process using waitpid function  **********
+wap to avoid zombie process by forking twice    **********
+wap to illustrate interpreter file  ************
+wap to write and read from a pipe  **************
+using pipe and fork functions write a program to create a pipe from parent to child and send data down the pipe  ***********
+wap to demonstrate use of popen and pclose function   **************
+wap for a simple filter illustration to add two numbers   *********
+wap for a simple filter illustration to concatenate two strings *******
+write a simple co process that reads two numbers from its stdin computing their sum and writing the sum to its stdout ***
+wap to illustrate client server communication
+wap to avoid zombie using signals(sigchid)  *********
+wap to show daemon_init function  ************
+wap to illustrate the effect of setjump and longjump on different kinds of variables   ********
+wap filter to convert uppercase character to lowercase character and also invoke uppercase/lowercase filter to read commands ***********

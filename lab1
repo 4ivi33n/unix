@@ -1,0 +1,162 @@
+#include <fcntl.h>
+#include <stdio.h>
+#include <unistd.h>
+#include <sys/stat.h>
+#include <time.h>
+#include <sys/types.h>
+int main() {
+	int fd;
+	if ((fd=open("file",O_RDWR|O_CREAT|O_TRUNC,S_IRUSR|S_IWUSR)) == -1) {
+		printf("Error");
+	}
+	char buf1[] = "abcdefghij";
+	char buf2[] = "ABCDEFGHIJ";
+	if (write(fd,buf1,10) != 10) printf("error");
+	if (lseek(fd,100,SEEK_SET)<0) printf("error");
+	if (write(fd,buf2,10) != 10) printf("error");
+}
+
+
+
+int main() {
+	if (open("file",O_RDWR)<0) printf("error");
+	if (unlink("file")<0) printf("error");
+	printf("file unlinked");
+	fflush(stdout);
+	sleep(20);
+	printf("done");
+	return 0;
+}
+
+
+#include <setjmp.h>
+jmp_buf buf;
+int g;
+void f1();
+void f2();
+
+int main() {
+	int a;
+	register int r;
+	volatile int v;
+	static int s;
+	a = r = v = s = 1;
+	if (setjmp(buf) != 0) {
+		printf("After longjmp: auto %d, reg %d, vol %d, static %d\n", a,r,v,s);
+		return 0;
+	}
+	a = r= v= s = 10;
+	f1(a,r,v,s);
+	return 0;
+}
+void f1(int a,int b,int c,int d) {
+	printf("f1() : auto %d, reg %d, volv %d, statv %d\n", a,b,c,d);
+	f2();
+}
+
+void f2() {
+	longjmp(buf,1);
+}
+
+
+int main() {
+	int n;
+	char buf[4096];
+	while ((n=read(STDIN_FILENO,buf,4096)) > 0) 
+		if (write(STDOUT_FILENO,buf,n) != n)
+			printf("error");
+	if (n < 0) printf("read error");
+	return 0;
+}
+
+
+void setFlags(int fd,int fl) {
+	int v;
+	if ((v=fcntl(fd,F_GETFL,0))<0) printf("error");
+	v |= fl;
+	if (fcntl(fd,F_SETFL,v)<0) printf("error");
+}
+int main(int argc, char *argv[]) {
+	int val;
+	if ((val = fcntl(atoi(argv[1]),F_GETFL,0))<0) printf ("error");
+	int mode = val & O_ACCMODE;
+	if (mode == O_RDONLY) printf("read only");
+	else if (mode == O_WRONLY) printf("write only");
+	else if (mode == O_RDWR) printf("read write");
+
+	if (val & O_APPEND) printf("append");
+	if (val & O_NONBLOCK) printf("non block");
+	if (val & O_SYNC) printf("sync");
+
+	int v;
+	setFlags(STDOUT_FILENO,O_APPEND);
+	if ((v=fcntl(STDOUT_FILENO,F_GETFL,0))<0) printf("error");
+	if (v&O_APPEND) printf("yes");
+	return 0;
+}
+
+
+
+int main(int argc, char *argv[]) {
+	int i;
+	for (i=1;i<argc;i++) {
+		printf ("\n%s : ",argv[i]);
+		struct stat buf;
+		if(lstat(argv[i],&buf) < 0) printf("error");
+		if (S_ISREG(buf.st_mode)) printf("regular file");
+		else if (S_ISDIR(buf.st_mode)) printf("directory file");
+		else if (S_ISBLK(buf.st_mode)) printf("block file");
+		else if (S_ISCHR(buf.st_mode)) printf("character file");
+		else if (S_ISFIFO(buf.st_mode)) printf("FIFO file");
+		else if (S_ISLNK(buf.st_mode)) printf("Link file");
+		else if (S_ISSOCK(buf.st_mode)) printf("Sock file");
+
+	}
+	return 0;
+}
+
+
+int main() {
+	int fd;
+	if ((fd=open("q45", O_RDONLY)) == -1) printf("error");
+	else printf("file descriptor = %d", fd);
+
+	return 0;
+}
+
+
+int main() {
+	int in = dup(STDIN_FILENO);
+	int out = dup(STDOUT_FILENO);
+	int n;
+	char buf[4096];
+	while ((n=read(in,buf,4096))>0) {
+		if(write(out,buf,n) != n) printf("error");
+	}
+	if (n < 0) printf ("read error");
+	
+	return 0;
+}
+
+int main() {
+	int fd = open("newfile",O_RDWR|O_CREAT,S_IRUSR|S_IWUSR);
+	if (dup2(fd,1) == -1) {
+		printf("error");
+	}
+	printf("fdsfd");
+}
+
+
+int main() {
+	int in = dup(STDIN_FILENO);
+	int out = dup(STDOUT_FILENO);
+	int n;
+	char buf[4096];
+	while ((n=read(in,buf,4096))>0) {
+		if(write(out,buf,n) != n) printf("error");
+	}
+	if (n < 0) printf ("read error");
+	
+	return 0;
+}
+
